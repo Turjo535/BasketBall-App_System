@@ -1,0 +1,909 @@
+{
+	"info": {
+		"_postman_id": "dc987100-d4be-48c9-b59d-b96abb095bb9",
+		"name": "Basketball app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41955046"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Email Validation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>Error</th>\r",
+									"    </tr>\r",
+									"    <tr>\r",
+									"        <td>{{response.error}}</td>\r",
+									"    </tr>\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()};\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwODU5MDMyLCJpYXQiOjE3NTA4NTg3MzIsImp0aSI6IjM4YTVkYzJmN2JjMzQ0M2NhYjg3NGMxZTg5NmIyZThkIiwidXNlcl9pZCI6IjxkamFuZ28uZGIubW9kZWxzLnF1ZXJ5X3V0aWxzLkRlZmVycmVkQXR0cmlidXRlIG9iamVjdCBhdCAweDAwMDAwMUVGNUJEMTFFQTA-In0.EXS1bZ_kSwo328wn6-lw2HLAROZ4KPyzKl1bn56OYr4",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"turjokhan434@gmail.com\"\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/user/validate-email/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"user",
+								"validate-email",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Turjo",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/user/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"user",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "turjokhan434@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "otp_secret",
+									"value": "999038",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/user/verify-otp/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"user",
+								"verify-otp",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refresh\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc1MTAwNzAxOSwiaWF0IjoxNzUwOTIwNjE5LCJqdGkiOiIwMGIwM2NkYzFkZWM0YzNmYTdmZWNiNTc5OTFmZTUwMiIsInVzZXJfaWQiOjEwfQ.TlhDiWKTVckQgsgjRm6eZ_dQInKXEexj23iGPUil0G4\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/user/token-refresh/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"user",
+								"token-refresh",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwOTU3OTI5LCJpYXQiOjE3NTA5NTc2MjksImp0aSI6IjRjYjcwOTc3Zjk0ZDRmMzc4MjQxMDQ1NzFmYTU4YWUwIiwidXNlcl9pZCI6MTB9.Ll2PLnmFA7JHzuNcZASqCFwSfKzqrmDFQn9LWp6B9Is",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "current_password",
+									"value": "23456787",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "23456788",
+									"type": "text"
+								},
+								{
+									"key": "password2",
+									"value": "23456788",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/user/change-password/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"user",
+								"change-password",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forget Password Reset",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMzAzMjY2LCJpYXQiOjE3NTEzMDI5NjYsImp0aSI6IjUyZTJjMGU5OWQxNTQ2MzU5NWM3YTAxNTM1ZGNkOTlkIiwidXNlcl9pZCI6MTF9.gDE3WzzJSTf_BawlBOk8w-QxCPrvC-wbElLWossunxU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "new_password",
+									"value": "12345679",
+									"type": "text"
+								},
+								{
+									"key": "new_password2",
+									"value": "12345679",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/user/forget-password-reset/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"user",
+								"forget-password-reset",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registration",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"host": true,
+							"user-agent": true,
+							"accept": true,
+							"accept-encoding": true,
+							"connection": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\":      \"Rafiq\",\r\n  \"email\":     \"turjokhan434@gmail.com\",\r\n  \"phone\":     \"128345678914\",\r\n  \"role\":       \"coach\",\r\n  \"password\":  \"12345678\",\r\n  \"password2\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/user/register/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"user",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwOTYwNzI1LCJpYXQiOjE3NTA5NjA0MjUsImp0aSI6IjU1Y2ZhOWZhNGVjNDRjODBhODI0Y2RkYmM0YTA4Zjk0IiwidXNlcl9pZCI6MTB9.Iz1kfwEHyRzaoIGCZfEkW_5pf0_M4PMJ5N6iK32VdYg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "access",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwOTYwMzAzLCJpYXQiOjE3NTA5NjAwMDMsImp0aSI6IjE1ZTY1Zjc5NTI1NTQ2NjdhMzU2NGI5NTFiNjBiMWViIiwidXNlcl9pZCI6MTB9.g-H7VufWMq9u_H9hF3fyXrV67NtJrZp2jv3MTnwgsHg",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/user/logout/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"user",
+								"logout",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Player",
+			"item": [
+				{
+					"name": "Player Information",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjEzNzM1LCJpYXQiOjE3NTEyMTM0MzUsImp0aSI6ImNlYWYwMTQ0ODJhNjQxNDY5MzUyOThmMGUxZjM2MzllIiwidXNlcl9pZCI6MTB9.5bf8lsfhWyzV98zzFlk1MloQ6RFo30U1TbmnL3l-eNw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user",
+									"value": "turjo",
+									"type": "text"
+								},
+								{
+									"key": "jersey",
+									"value": "33",
+									"type": "text"
+								},
+								{
+									"key": "height",
+									"value": "5.7",
+									"type": "text"
+								},
+								{
+									"key": "position",
+									"value": "CD",
+									"type": "text"
+								},
+								{
+									"key": "class_year",
+									"value": "good",
+									"type": "text"
+								},
+								{
+									"key": "game_context",
+									"value": "bhb",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "M",
+									"type": "text"
+								},
+								{
+									"key": "opponent",
+									"value": "hbanbd hba",
+									"type": "text"
+								},
+								{
+									"key": "performance_note",
+									"value": "hba h",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "game_video",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/player/playerinfo/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"player",
+								"playerinfo",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Report",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjEwOTY1LCJpYXQiOjE3NTEyMTA2NjUsImp0aSI6IjJmMTQ5ZjBiMGUzZTRmNTliNWI4M2FhYTg5NWY0ZDc0IiwidXNlcl9pZCI6MTB9.D3xdcGXaeO3pidkVhrgv4jFX8-gzNGurYrkPVT8FUqw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user",
+									"value": "Turjo",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "overview",
+									"value": "uhdcb",
+									"type": "text"
+								},
+								{
+									"key": "strength",
+									"value": "yghhgv",
+									"type": "text"
+								},
+								{
+									"key": "weaknesses",
+									"value": "hgxahj",
+									"type": "text"
+								},
+								{
+									"key": "projection",
+									"value": "75.25",
+									"type": "text"
+								},
+								{
+									"key": "points_per_game",
+									"value": "82",
+									"type": "text"
+								},
+								{
+									"key": "field_goal_percentage",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "rebounds",
+									"value": "86",
+									"type": "text"
+								},
+								{
+									"key": "assists",
+									"value": "70",
+									"type": "text"
+								},
+								{
+									"key": "steals_and_blocks",
+									"value": "25",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/player/report/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"player",
+								"report",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Scouting Context",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjEyNzY1LCJpYXQiOjE3NTEyMTI0NjUsImp0aSI6IjMxM2MyOTZkM2ZkMjQ0YmZhMTQ0OTQyZWIwZDI3YjJhIiwidXNlcl9pZCI6MTB9.H_W_t44FPixuXaQfwVk3zpX2El0lHa6dxA0RA06LSic",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user",
+									"value": "Turjo",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "tournament_name",
+									"value": "hbaxbc ",
+									"type": "text"
+								},
+								{
+									"key": "game_result",
+									"value": "hbdcaj",
+									"type": "text"
+								},
+								{
+									"key": "opponent_faced",
+									"value": "hjasjhb",
+									"type": "text"
+								},
+								{
+									"key": "score_or_margin",
+									"value": "4-1",
+									"type": "text"
+								},
+								{
+									"key": "game_flow_details",
+									"value": "jnbcajkjknax",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/player/scouting-context/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"player",
+								"scouting-context",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Creating pdf",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjU1NjE3LCJpYXQiOjE3NTEyNTUzMTcsImp0aSI6ImMyNDAxZTliYjEwOTRjYTVhZjc4MzY3MTQ0ZGVjZDZmIiwidXNlcl9pZCI6MTB9.CooRXCo_286B8kRKSTHCmVMtxPYvi39IJzMajSyqqk0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Turjo",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/player/report/1/pdf/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"player",
+								"report",
+								"1",
+								"pdf",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Report",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjU3NDE3LCJpYXQiOjE3NTEyNTcxMTcsImp0aSI6ImIyNzhkZjcyMzAxNTQ2NmM4OTljMjczY2JjZTQzOGEwIiwidXNlcl9pZCI6MTB9.j4XYd2uLJw42dSnY6kuQUncRCLKZX1-_jKigpgbZUA4",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/player/report/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"player",
+								"report",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pdf Sent in Email",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjYwMjk2LCJpYXQiOjE3NTEyNTk5OTYsImp0aSI6IjlkZDU1OWY3MDllOTQ1ZjNhNWJjZTI4MGNmOGM2Y2RiIiwidXNlcl9pZCI6MTB9.iqacVTklCgEQ6pyNnW1ApUdMKptByxdmsOJ8nCQPvvU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/player/report/1/pdf/email/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"player",
+								"report",
+								"1",
+								"pdf",
+								"email",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Report List PDF",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjYzODYxLCJpYXQiOjE3NTEyNjM1NjEsImp0aSI6ImU4YzRmNmU3ZGI1YzQyMmY5NTBlN2RmYTQ5MjI1ODk0IiwidXNlcl9pZCI6MTB9.81RJhSyC1sVqb2_2jTbJvF_RrUVciKM_zvFAcnkXwRU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/player/report/lists/pdf/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"player",
+								"report",
+								"lists",
+								"pdf",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Player List",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Report List",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Coach",
+			"item": [
+				{
+					"name": "Team Information",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Team Scouting",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Teams List",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Team Scouting List",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
