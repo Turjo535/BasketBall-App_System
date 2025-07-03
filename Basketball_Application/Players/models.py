@@ -8,9 +8,11 @@ class Player(models.Model):
     position = models.CharField(max_length=50)
     class_year = models.CharField(max_length=10)
     game_context = models.CharField(max_length=255)
+    team=models.CharField(max_length=255)
     gender = models.CharField(max_length=10)
     opponent = models.CharField(max_length=255)
     performance_note = models.TextField(blank=True, null=True)
+    tournament=models.CharField(blank=True,null=True)
     image=models.ImageField(blank=True, null=True)
     game_video=models.FileField(upload_to="video/%y",blank=True, null=True)
 
@@ -32,9 +34,10 @@ class Scouting_Context(models.Model):
 
 class Report_Model(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title=models.TextField(max_length=100, null=True, blank=True)
     overview=models.TextField()
-    strength = models.TextField()
-    weaknesses = models.TextField()
+    strength = models.JSONField(null=True,blank=True)
+    weaknesses = models.JSONField(null=True,blank=True)
     projection = models.TextField()
     points_per_game = models.DecimalField(max_digits=5, decimal_places=1)
     field_goal_percentage = models.DecimalField(max_digits=5, decimal_places=1)

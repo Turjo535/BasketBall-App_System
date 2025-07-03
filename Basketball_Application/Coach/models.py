@@ -16,8 +16,8 @@ class Team_Scouting_model(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     report_title = models.CharField(max_length=200)
     overview = models.TextField()
-    strengths = models.TextField()  
-    weaknesses = models.TextField()  
+    strengths = models.JSONField()  
+    weaknesses = models.JSONField()  
     key_players = models.ManyToManyField(
         User,
         related_name='key_players',

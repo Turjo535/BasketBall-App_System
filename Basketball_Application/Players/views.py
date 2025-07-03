@@ -6,7 +6,7 @@ from UserAccount.models import User
 from .models import Report_Model
 from .pdf import generate_player_report
 from UserAccount.utils import Util
-from .serializers import Player_Information_Serializers,Report_Serializers, Scouting_Context_Serializers,ReportSerializerID
+from .serializers import Player_Information_Serializers,Player_list_serializer,Report_Serializers, Scouting_Context_Serializers,ReportSerializerID
 from UserAccount.models import User
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -18,9 +18,11 @@ from rest_framework.exceptions import NotFound
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.core.files.base import ContentFile
+from django.shortcuts import get_object_or_404
 
 from django.core.files import File
 from datetime import datetime
+from django.utils import timezone
 
 # Create your views here.
 
@@ -38,26 +40,31 @@ class Player_Information_View(APIView):
             return Response("Player information saved successfully.", status=201)
         else:
             return Response(serializer.errors, status=400)
+        
+class Player_list_view(APIView):
+    permission_classes=[IsAuthenticated]
+    def get(self, request):
+        players=User.objects.filter(role='player')
+        serializer=Player_list_serializer(players,many=True)
+        return Response(serializer.data)
 
-@method_decorator(csrf_exempt, name='dispatch')
+#@method_decorator(csrf_exempt, name='dispatch')
 class ReportView(APIView):
     permission_classes=[Is_Player,IsOwner, IsAuthenticated]
     # def get(self, request):
     #     # Render empty form
     #     return render(request, 'report_form.html')
     def post(self, request):
+        
         serializer=Report_Serializers(data=request.data)
-        #print(serializer)
+   
         
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response("Player Report saved successfully.", status=201)
-            # return render(request, 'report_form.html', {
-            #     'message': 'Player Report saved successfully!'
-            # })
         else:
             return Response(serializer.errors, status=400 )
-        
+
 class Scouting_Context_Views(APIView):
     permission_classes=[Is_Player,IsOwner, IsAuthenticated]
     def post(self, request):
@@ -67,8 +74,8 @@ class Scouting_Context_Views(APIView):
             return Response("Player Scouting Report saved successfully.", status=201)
         else:
             return Response(serializer.errors,status=400)
-        
-class ReportView(APIView):
+
+class ReportDetailView(APIView):
     permission_classes=[IsAuthenticated]
     def get(self,request,id):
         report=Report_Model.objects.get(id=id, user=request.user)
@@ -80,27 +87,27 @@ class ReportView(APIView):
 
 
 class PlayerReportPDFView(APIView):
-    permission_classes = [IsAuthenticated]
     
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, id):
-        try:
-            
-            report = Report_Model.objects.get(id=id, user=request.user)
-            #print("this is my report", report)
-            
-           
-            
-            pdf_buffer = generate_player_report(report)
-            pdf_bytes = pdf_buffer.getvalue()  
-            pdf_buffer.close()
-            filename = f"player_report_{request.user.id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.pdf"
-            if not report.pdf:
-                report.pdf.save(filename, ContentFile(pdf_bytes))
-            response = HttpResponse(pdf_bytes, content_type='application/pdf')
-            response['Content-Disposition'] = f'attachment; filename="player_report_{id}.pdf"'
-            return response
-        except Report_Model.DoesNotExist:
-            raise NotFound("Report not found or you don't have permission to access it")
+        # fetch and 404 if not found / not owned
+        report = get_object_or_404(Report_Model, id=id, user=request.user)
+
+        # generate PDF
+        pdf_buffer = generate_player_report(report)
+        pdf_bytes = pdf_buffer.getvalue()
+        pdf_buffer.close()
+
+        # save to model if not yet saved, or overwrite
+        filename = f"player_report_{request.user.id}_{timezone.now().strftime('%Y%m%d%H%M%S')}.pdf"
+        content = ContentFile(pdf_bytes, name=filename)
+        report.pdf.save(filename, content, save=True)
+
+        # stream as download
+        resp = HttpResponse(pdf_bytes, content_type='application/pdf')
+        resp['Content-Disposition'] = f'attachment; filename="player_report_{report.id}.pdf"'
+        return resp
         
 class ReportPDFEmailSentView(APIView):
     permission_classes = [IsAuthenticated]

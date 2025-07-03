@@ -1,112 +1,118 @@
-
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import inch
-from reportlab.platypus import Paragraph, Table, TableStyle
-from reportlab.lib import colors
 from io import BytesIO
 import datetime
+from PIL import Image, ImageDraw, ImageFont
+
+
+DPI = 72
+PAGE_SIZE = (int(8.5 * DPI), int(11 * DPI))
+MARGIN = 50
+
+
+
+title_font   = ImageFont.load_default()
+section_font = ImageFont.load_default()
+body_font    = ImageFont.load_default()
+
+def get_text_size(draw, text, font):
+    
+    bbox = draw.textbbox((0, 0), text, font=font)
+    return (bbox[2] - bbox[0], bbox[3] - bbox[1])
+
+
+def wrap_text(text, font, max_width, draw):
+    
+    words = text.split()
+    lines = []
+    current = ""
+    for w in words:
+        test = (current + " " + w).strip()
+        w_box = draw.textbbox((0, 0), test, font=font)
+        if w_box[2] - w_box[0] > max_width and current:
+            lines.append(current)
+            current = w
+        else:
+            current = test
+    if current:
+        lines.append(current)
+    return lines
+
 
 def generate_player_report(report):
 
-    buffer = BytesIO()
-    
+    img = Image.new("RGB", PAGE_SIZE, "white")
+    draw = ImageDraw.Draw(img)
 
-    pdf = canvas.Canvas(buffer, pagesize=letter)
-    width, height = letter
-    
+    x = MARGIN
+    y = MARGIN
 
-    styles = getSampleStyleSheet()
-    
-   
-    title_style = ParagraphStyle(
-        'title_style',
-        parent=styles['Heading1'],
-        fontSize=20,
-        alignment=1,  # Center aligned
-        spaceAfter=0.5*inch
-    )
-    
-    section_style = ParagraphStyle(
-        'section_style',
-        parent=styles['Heading2'],
-        fontSize=14,
-        spaceBefore=0.3*inch,
-        spaceAfter=0.1*inch
-    )
-    
-   
-    current_time = datetime.datetime.now().strftime("%H:%M")
-    pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, height - 50, "Report")
-    pdf.drawString(width - 100, height - 50, current_time)
-    
-    title = Paragraph(f"Report for {report.user.name}", title_style)
-    title.wrapOn(pdf, width - 100, height)
-    title.drawOn(pdf, 50, height - 100)
-    
-    overview_title = Paragraph("Overview", section_style)
-    overview_title.wrapOn(pdf, width - 100, height)
-    overview_title.drawOn(pdf, 50, height - 150)
-    
-    overview_content = Paragraph(report.overview, styles['BodyText'])
-    overview_content.wrapOn(pdf, width - 100, height)
-    overview_content.drawOn(pdf, 50, height - 180)
-
-    strength_title = Paragraph("Strength", section_style)
-    strength_title.wrapOn(pdf, width - 100, height)
-    strength_title.drawOn(pdf, 50, height - 230)
-    
-    strength_content = Paragraph(report.strength, styles['BodyText'])
-    strength_content.wrapOn(pdf, width - 100, height)
-    strength_content.drawOn(pdf, 50, height - 260)
-    
-
-    weaknesses_title = Paragraph("Weaknesses", section_style)
-    weaknesses_title.wrapOn(pdf, width - 100, height)
-    weaknesses_title.drawOn(pdf, 50, height - 310)
-    
-    weaknesses_content = Paragraph(report.weaknesses, styles['BodyText'])
-    weaknesses_content.wrapOn(pdf, width - 100, height)
-    weaknesses_content.drawOn(pdf, 50, height - 340)
-
-    projection_title = Paragraph("Projection", section_style)
-    projection_title.wrapOn(pdf, width - 100, height)
-    projection_title.drawOn(pdf, 50, height - 390)
-    
-    projection_content = Paragraph(report.projection, styles['BodyText'])
-    projection_content.wrapOn(pdf, width - 100, height)
-    projection_content.drawOn(pdf, 50, height - 420)
-    
   
-    stats_title = Paragraph("Performance Stats", section_style)
-    stats_title.wrapOn(pdf, width - 100, height)
-    stats_title.drawOn(pdf, 50, height - 480)
-    
-    stats_data = [
-        ["Points Per Game (PPG)", report.points_per_game],
-        ["Field Goal % (FG%)", f"{report.field_goal_percentage}%"],
-        ["Rebounds (RPG)", report.rebounds],
-        ["Assists (APG)", report.assists],
-        ["Steals & Blocks", report.steals_and_blocks]
-    ]
-    
-    stats_table = Table(stats_data, colWidths=[3*inch, 1.5*inch])
-    stats_table.setStyle(TableStyle([
-        ('FONT', (0, 0), (-1, -1), 'Helvetica', 10),
-        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
-        ('ALIGN', (1, 0), (1, -1), 'RIGHT'),
-    ]))
-    
-    stats_table.wrapOn(pdf, width - 100, height)
-    stats_table.drawOn(pdf, 50, height - 550)
-    
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    draw.text((x, y), f"{report.user.name}'s Report", font=title_font, fill="black")
+    w, h = get_text_size(draw, now, body_font)
+    draw.text((PAGE_SIZE[0] - MARGIN - w, y), now, font=body_font, fill="black")
+    y += h + 20
 
-    pdf.showPage()
-    pdf.save()
-    
+
+    title = f"Report for { report.user.name}"
+    draw.text((x, y), title, font=title_font, fill="black")
+    _, title_h = get_text_size(draw, title, title_font)
+    y += title_h + 30
+
+
+    def draw_section(header, content, is_list=False):
+        nonlocal y
+
+        draw.text((x, y), header, font=section_font, fill="black")
+        _, sec_h = get_text_size(draw, header, section_font)
+        y += sec_h + 10
+
+        if is_list and isinstance(content, list):
+            for item in content:
+              
+                draw.text((x + 10, y), u"\u2022", font=body_font, fill="black")
+               
+                lines = wrap_text(item, body_font, PAGE_SIZE[0] - 2*MARGIN - 30, draw)
+                for line in lines:
+                    draw.text((x + 30, y), line, font=body_font, fill="black")
+                    _, line_h = get_text_size(draw, line, body_font)
+                    y += line_h + 2
+            y += 10
+        else:
+
+            lines = wrap_text(str(content or "—"), body_font, PAGE_SIZE[0] - 2*MARGIN, draw)
+            for line in lines:
+                draw.text((x, y), line, font=body_font, fill="black")
+                _, line_h = get_text_size(draw, line, body_font)
+                y += line_h + 2
+            y += 10
+
+ 
+    draw_section("Overview", report.overview)
+    draw_section("Strengths", report.strength, is_list=True)
+    draw_section("Weaknesses", report.weaknesses, is_list=True)
+    draw_section("Projection", report.projection)
+
    
+    header = "Performance Stats"
+    draw.text((x, y), header, font=section_font, fill="black")
+    _, sec_h = get_text_size(draw, header, section_font)
+    y += sec_h + 10
+
+    stats = [
+        ("Points Per Game (PPG)", report.points_per_game),
+        ("Field Goal % (FG%)", f"{report.field_goal_percentage}%"),
+        ("Rebounds (RPG)", report.rebounds),
+        ("Assists (APG)", report.assists),
+        ("Steals & Blocks", report.steals_and_blocks),
+    ]
+    for label, val in stats:
+        text = f"{label}: {val}"
+        draw.text((x, y), text, font=body_font, fill="black")
+        _, line_h = get_text_size(draw, text, body_font)
+        y += line_h + 5
+
+   
+    buffer = BytesIO()
+    img.save(buffer, format="PDF", resolution=DPI)
     buffer.seek(0)
     return buffer

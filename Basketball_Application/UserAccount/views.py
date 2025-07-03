@@ -75,13 +75,14 @@ class EmailValidationView(APIView):
             email = serializer.validated_data['email']
             try:
                 user = User.objects.get(email=email)
-                return Response({"message": "Email is valid."}, status=status.HTTP_200_OK)
+                token = get_tokens_for_user(user)
+                return Response({"message": "Email is valid.","token": token}, status=status.HTTP_200_OK)
             except User.DoesNotExist:
                 return Response({"error": "Email does not exist."}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class VerifyOTPView(APIView):
-    
+    permission_classes=[IsAuthenticated]
     def post(self, request):
         serializer = VerifyOTPSerializer(data=request.data)
         if serializer.is_valid():
@@ -107,7 +108,7 @@ class UserChangePasswordView(APIView):
         return Response({'msg':'Password Changed Successfully'}, status=status.HTTP_200_OK)
 
 class ForgetPasswordResetView(APIView):
-    
+    permission_classes=[IsAuthenticated]
     def post(self, request, format=None):
         serializer = ForgetPasswordResetSerializer(data=request.data, context={'user': request.user})
         print(request.user, "This is user")

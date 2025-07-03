@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Player, Scouting_Context,Report_Model
-
+from UserAccount.models import User
 
 class Player_Information_Serializers(serializers.ModelSerializer):
     user = serializers.CharField(source='user.name', read_only=True)
@@ -12,13 +12,18 @@ class Player_Information_Serializers(serializers.ModelSerializer):
             'position',
             'class_year',
             'game_context',
+            'team',
             'gender',
             'opponent',
             'performance_note',
+            'tournament',
             'image',
             'game_video',
             ]
-
+class Player_list_serializer(serializers.ModelSerializer):
+    class Meta:
+        model=User
+        fields=['name', 'email', 'phone']
 
 class Report_Serializers(serializers.ModelSerializer):
     user = serializers.CharField(source='user.name', read_only=True)
@@ -26,6 +31,7 @@ class Report_Serializers(serializers.ModelSerializer):
         model=Report_Model
         fields=[
             'user',
+            'title',
             'overview',
             'strength',
             'weaknesses', 
