@@ -267,9 +267,7 @@ http://localhost:8000/
 Import the provided `Basketball_Application.postman_collection.json` for complete API testing.
 ---
 ### Published Postman Collection
-```
-https://documenter.getpostman.com/view/41955046/2sB34Zqj2s
-```
+[https://documenter.getpostman.com/view/41955046/2sB34Zqj2s](https://documenter.getpostman.com/view/41955046/2sB34Zqj2s)
 ### 🔐 Authentication Endpoints (`/user/`)
 
 #### Register
