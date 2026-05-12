@@ -4,9 +4,9 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-_s+#^)b3c!l=a*!tmw7h5bkr5_f4lf@o99z+jz-_5s&wlez0at'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'UserAccount.User'
